@@ -64,28 +64,55 @@ double evalPostfix(const vector<Token>& tokens) {
 // Main
 
 int main() {
-    string line;
-    getline(cin, line);
+    // string line;
+    // getline(cin, line);
+    //
+    // vector<Token> tokens = tokenize(line);
+    //
+    // if (isValidPostfix(tokens)) {
+    //     cout << "FORMAT: POSTFIX\n";
+    //     cout << "RESULT: " << evalPostfix(tokens) << "\n";
+    // }
+    // else if (isValidInfix(tokens)) {
+    //     vector<Token> postfix = infixToPostfix(tokens);
+    //     cout << "FORMAT: INFIX\n";
+    //     cout << "POSTFIX: ";
+    //     for (const auto& t : postfix) {
+    //         cout << t.value << " ";
+    //     }
+    //     cout << "\n";
+    //     cout << "RESULT: " << evalPostfix(postfix) << "\n";
+    // }
+    // else {
+    //     cout << "FORMAT: NEITHER\n";
+    //     cout << "ERROR: invalid expression\n";
+    // }
 
-    vector<Token> tokens = tokenize(line);
-
-    if (isValidPostfix(tokens)) {
-        cout << "FORMAT: POSTFIX\n";
-        cout << "RESULT: " << evalPostfix(tokens) << "\n";
+    ArrayStack<double> stack;
+    cout << "Adding 2 values to the stack: 5, 6" << endl << endl;
+    stack.push(5);
+    stack.push(6);
+    cout << "Top of the stack: " << stack.top() << endl;
+    cout << "Current size: " << stack.size() << endl;
+    cout << "Is stack empty? " << stack.empty() << endl << endl;
+    cout << "Popping the stack until it is empty" << endl << endl;
+    stack.pop();
+    cout << "Top of the stack with size of " << stack.size() << ": " << stack.top() << endl;
+    stack.pop();
+    cout << "Current size: " << stack.size() << endl;
+    cout << "Is stack empty? " << stack.empty() << endl << endl;
+    cout << "Testing edge cases with empty stack" << endl << endl;
+    try {
+        stack.pop();
     }
-    else if (isValidInfix(tokens)) {
-        vector<Token> postfix = infixToPostfix(tokens);
-        cout << "FORMAT: INFIX\n";
-        cout << "POSTFIX: ";
-        for (const auto& t : postfix) {
-            cout << t.value << " ";
-        }
-        cout << "\n";
-        cout << "RESULT: " << evalPostfix(postfix) << "\n";
+    catch (...) {
+        cout << "pop method has successful safeguard" << endl;
     }
-    else {
-        cout << "FORMAT: NEITHER\n";
-        cout << "ERROR: invalid expression\n";
+    try {
+        cout << stack.top() << endl;
+    }
+    catch (...) {
+        cout << "top method has successful safeguard" << endl;
     }
 
     return 0;
