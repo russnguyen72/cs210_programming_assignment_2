@@ -18,7 +18,13 @@ struct Token {
 
 vector<Token> tokenize(const string& line) {
     vector<Token> tokens;
-    // TODO
+    for (int i = 0; i < line.length(); i++) {
+        if (!isspace(line[i])) {
+            Token t;
+            t.value = line[i];
+            tokens.push_back(t);
+        }
+    }
     return tokens;
 }
 
@@ -112,7 +118,15 @@ int main() {
         cout << stack.top() << endl;
     }
     catch (...) {
-        cout << "top method has successful safeguard" << endl;
+        cout << "top method has successful safeguard" << endl << endl;
+    }
+
+    const string str = "5 + 4 * 3 nananabooboo HEHEHEH";
+    const vector<Token> tokens = tokenize(str);
+
+    cout << "Tokens in tokens vector: " << endl;
+    for (const Token& t : tokens) {
+        cout << t.value;
     }
 
     return 0;
