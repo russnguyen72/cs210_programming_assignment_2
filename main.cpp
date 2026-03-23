@@ -17,9 +17,10 @@ struct Token {
 // Tokenizer
 
 vector<Token> tokenize(const string& line) {
+    bool isOperator(const string& s);
     vector<Token> tokens;
     for (int i = 0; i < line.length(); i++) {
-        if (!isspace(line[i])) {
+        if (isOperator(line.substr(i, 1)) || isdigit(line[i]) || line[i] == ')' || line[i] == '(') {
             Token t;
             t.value = line[i];
             tokens.push_back(t);
@@ -35,7 +36,8 @@ bool isOperator(const string& s) {
 }
 
 int precedence(const string& op) {
-    // TODO
+    if (op == "(" || op == ")") return 3;
+    if (isOperator(op)) return (op == "*" || op == "/") ? 2 : 1;
     return 0;
 }
 
@@ -121,12 +123,18 @@ int main() {
         cout << "top method has successful safeguard" << endl << endl;
     }
 
-    const string str = "5 + 4 * 3 nananabooboo HEHEHEH";
+    const string str = "5 +trendy2 4 * sussy baka (3 qwerty0uiop[]\\asdfg=h-1j7)kl;'\"zxcvbnm,./98|`~";
     const vector<Token> tokens = tokenize(str);
 
     cout << "Tokens in tokens vector: " << endl;
     for (const Token& t : tokens) {
-        cout << t.value;
+        cout << t.value << " ";
+    }
+    cout << endl;
+
+    cout << "Precedence for the individual Token objects in tokens vector: " << endl;
+    for (const Token& t : tokens) {
+        cout << precedence(t.value) << " ";
     }
 
     return 0;

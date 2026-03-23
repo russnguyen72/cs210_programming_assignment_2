@@ -28,3 +28,18 @@ and stores those tokens into a vector. I then tested out the tokenizer so that i
 in a string by creating a string with random characters and numbers, separated by spaces, and then feeding it into the 
 tokenizer algorithm. After feeding it into the tokenizer algorithm, I printed the string value of all the Token structs 
 in the tokens vector, ensuring that it is equivalent to the string I fed into it, but without the spaces.
+
+---
+
+### Entry 3
+#### Date: 2026-03-22
+
+Today I began implementing the precedence helper method and improved the tokenizer method. The issue with the tokenizer 
+method previously was that it converted every char that is not a space in the string into a Token object. However, this 
+time, I improved the tokenizer method so that only digits and the characters that relate to arithmetic operations get converted 
+into tokens. This will help reduce the amount of code that I would have to develop for the detection and conversion methods.
+Due to the lesser amount of code being written, this would also reduce the possibility of bugs that could show up after I
+develop the initial method. I then tested the rewritten tokenizer method by implementing a string with all the characters
+on my keyboard, and verifying that only numbers and arithmetic operator characters are left remaining. When I started
+implementing the precedence method, I only started developing for expressions without parentheses. For the next iteration
+of precedence, I will ensure that it works on expressions with parentheses, but for now, this will have to do.
