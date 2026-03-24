@@ -58,3 +58,20 @@ to the potential edge case within an infix expression where a number comes right
 In order to improve the tokenizer algorithm, I made sure that when the algorithm came across an open parentheses, it checks if
 a number comes before the open parentheses, and if it does, it adds the multiplication operator as a token inbetween the number
 and the parentheses. This check only occurs if the parentheses is not the very first token being added to the tokens vector.
+
+---
+
+### Entry 5
+#### Date: 2026-03-24
+
+I developed the evalPostfix method today. I used the isValidPostfix method within the method to first check to see whether
+a passed through expression is truly in postfix notation before even attempting to evaluate it. While developing the
+evalPostfix method, I realized that isValidPostfix has a bug where it accepts parentheses as a valid token type,
+and adds it to numCount internally. So, I added an if statement that immediately returns false if it notices any parentheses
+within an expression. I also tweaked the precedence method again and did not assign a precedence value to a closing parentheses,
+as through the Shunting-Yard algorithm, a closing parentheses will never get pushed to the operator stack. It will instead
+pop the stack until it reaches a matching closing parentheses. Therefore, I removed the condition for precedence to return 3
+when it encounters a closing parentheses. In order to test evalPostfix, I just tested it on the valid postfix expression
+and invalid postfix expressions that I have already created for the isValidPostfix method. When used on the valid postfix
+expression, I calculated the number myself and checked to see if the method would return the same value that I had calculated,
+which it did, thus verifying its capabilities for now.

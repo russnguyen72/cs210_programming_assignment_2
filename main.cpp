@@ -44,7 +44,7 @@ bool isOperator(const string& s) {
 }
 
 int precedence(const string& op) {
-    if (op == "(" || op == ")") return 3;
+    if (op == "(") return 3;
     if (isOperator(op)) return (op == "*" || op == "/") ? 2 : 1;
     return 0;
 }
@@ -56,6 +56,7 @@ bool isValidPostfix(const vector<Token>& tokens) {
     int opCount = 0;
 
     for (const Token& t : tokens) {
+        if (t.value == "(" || t.value == ")") return false;
         if (isOperator(t.value)) {
             opCount++;
             if (opCount >= numCount) return false;
@@ -85,8 +86,40 @@ vector<Token> infixToPostfix(const vector<Token>& tokens) {
 
 double evalPostfix(const vector<Token>& tokens) {
     ArrayStack<double> stack;
-    // TODO
-    return 0.0;
+    if (!isValidPostfix(tokens)) {
+        throw runtime_error("Not a valid postfix expression");
+    }
+    for (const Token& t : tokens) {
+        if (!isOperator(t.value)) {
+            stack.push(stod(t.value));
+        }
+        else {
+            const double num1 = stack.top();
+            stack.pop();
+            const double num2 = stack.top();
+            stack.pop();
+            if (t.value == "+") {
+                const double num3 = num1 + num2;
+                stack.push(num3);
+            }
+            else if (t.value == "-") {
+                const double num3 = num1 - num2;
+                stack.push(num3);
+            }
+            else if (t.value == "*") {
+                const double num3 = num1 * num2;
+                stack.push(num3);
+            }
+            else if (t.value == "/") {
+                const double num3 = num1 / num2;
+                stack.push(num3);
+            }
+            else {
+                throw runtime_error("how did this get reached what the heck");
+            }
+        }
+    }
+    return stack.top();
 }
 
 // Main
@@ -147,6 +180,7 @@ int main() {
     const vector<Token> validPostfix = tokenize(validPostfixStr);
 
     cout << "\"3 4 2 * +\" into isValidPostfix should return true: " << isValidPostfix(validPostfix) << endl;
+    cout << "\"3 4 2 * +\" into evalPostfix should return 11: " << evalPostfix(validPostfix) << endl;
 
     const string tooManyOpsStr = "3 - 4 2 * + ";
     const string tooLittleOpsStr = "3 4 2 *";
@@ -155,7 +189,22 @@ int main() {
     const vector<Token> tooLittleOps = tokenize(tooLittleOpsStr);
 
     cout << "\"3 - 4 2 * + \" into isValidPostfix should return false: " << isValidPostfix(tooManyOps) << endl;
+
+    try {
+        cout << "\"3 - 4 2 * + \" into evalPostfix should throw an error: " << evalPostfix(tooManyOps) << endl;
+    }
+    catch (exception& e) {
+        cout << "ERROR! " << e.what() << endl;
+    }
+
     cout << "\"3 4 2 *\" into isValidPostfix should return false: " << isValidPostfix(tooLittleOps) << endl;
+
+    try {
+        cout << "\"3 - 4 2 * + \" into evalPostfix should throw an error: " << evalPostfix(tooLittleOps) << endl;
+    }
+    catch (exception& e) {
+        cout << "ERROR! " << e.what() << endl;
+    }
 
     const vector<Token> onlyOneNumber = tokenize("1");
 
