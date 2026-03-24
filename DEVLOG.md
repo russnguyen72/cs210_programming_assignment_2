@@ -43,3 +43,18 @@ develop the initial method. I then tested the rewritten tokenizer method by impl
 on my keyboard, and verifying that only numbers and arithmetic operator characters are left remaining. When I started
 implementing the precedence method, I only started developing for expressions without parentheses. For the next iteration
 of precedence, I will ensure that it works on expressions with parentheses, but for now, this will have to do.
+
+---
+
+### Entry 4
+#### Date: 2026-03-23
+
+I improved the tokenizer algorithm to deal with a potential infix expression edge case and developed the isValidPostfix
+method. I also intended to improve on the precedence method, but after looking at the assignment and researching the
+Shunting-Yard algorithm, I realized that the precedence method is perfect for converting from infix to postfix. I originally
+envisioned the precedence method to be used on postfix equations to help the computer solve postfix expressions, but I realize
+that converting infix to postfix is the intended method to solve expressions instead of my vision. I then shifted my focus
+to the potential edge case within an infix expression where a number comes right before a parentheses to imply multiplication.
+In order to improve the tokenizer algorithm, I made sure that when the algorithm came across an open parentheses, it checks if
+a number comes before the open parentheses, and if it does, it adds the multiplication operator as a token inbetween the number
+and the parentheses. This check only occurs if the parentheses is not the very first token being added to the tokens vector.

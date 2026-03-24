@@ -21,6 +21,14 @@ vector<Token> tokenize(const string& line) {
     vector<Token> tokens;
     for (int i = 0; i < line.length(); i++) {
         if (isOperator(line.substr(i, 1)) || isdigit(line[i]) || line[i] == ')' || line[i] == '(') {
+            if (line[i] == '(' && !tokens.empty()) {
+                const Token* last = &tokens.back();
+                if (isdigit(last->value[0])) {
+                    Token mult;
+                    mult.value = "*";
+                    tokens.push_back(mult);
+                }
+            }
             Token t;
             t.value = line[i];
             tokens.push_back(t);
@@ -44,8 +52,20 @@ int precedence(const string& op) {
 // Detection
 
 bool isValidPostfix(const vector<Token>& tokens) {
-    // TODO
-    return false;
+    int numCount = 0;
+    int opCount = 0;
+
+    for (const Token& t : tokens) {
+        if (isOperator(t.value)) {
+            opCount++;
+            if (opCount >= numCount) return false;
+        }
+        else {
+            numCount++;
+        }
+    }
+
+    return numCount - opCount == 1;
 }
 
 bool isValidInfix(const vector<Token>& tokens) {
@@ -96,46 +116,70 @@ int main() {
     //     cout << "ERROR: invalid expression\n";
     // }
 
-    ArrayStack<double> stack;
-    cout << "Adding 2 values to the stack: 5, 6" << endl << endl;
-    stack.push(5);
-    stack.push(6);
-    cout << "Top of the stack: " << stack.top() << endl;
-    cout << "Current size: " << stack.size() << endl;
-    cout << "Is stack empty? " << stack.empty() << endl << endl;
-    cout << "Popping the stack until it is empty" << endl << endl;
-    stack.pop();
-    cout << "Top of the stack with size of " << stack.size() << ": " << stack.top() << endl;
-    stack.pop();
-    cout << "Current size: " << stack.size() << endl;
-    cout << "Is stack empty? " << stack.empty() << endl << endl;
-    cout << "Testing edge cases with empty stack" << endl << endl;
-    try {
-        stack.pop();
-    }
-    catch (...) {
-        cout << "pop method has successful safeguard" << endl;
-    }
-    try {
-        cout << stack.top() << endl;
-    }
-    catch (...) {
-        cout << "top method has successful safeguard" << endl << endl;
-    }
+    // ArrayStack<double> stack;
+    // cout << "Adding 2 values to the stack: 5, 6" << endl << endl;
+    // stack.push(5);
+    // stack.push(6);
+    // cout << "Top of the stack: " << stack.top() << endl;
+    // cout << "Current size: " << stack.size() << endl;
+    // cout << "Is stack empty? " << stack.empty() << endl << endl;
+    // cout << "Popping the stack until it is empty" << endl << endl;
+    // stack.pop();
+    // cout << "Top of the stack with size of " << stack.size() << ": " << stack.top() << endl;
+    // stack.pop();
+    // cout << "Current size: " << stack.size() << endl;
+    // cout << "Is stack empty? " << stack.empty() << endl << endl;
+    // cout << "Testing edge cases with empty stack" << endl << endl;
+    // try {
+    //     stack.pop();
+    // }
+    // catch (...) {
+    //     cout << "pop method has successful safeguard" << endl;
+    // }
+    // try {
+    //     cout << stack.top() << endl;
+    // }
+    // catch (...) {
+    //     cout << "top method has successful safeguard" << endl << endl;
+    // }
 
-    const string str = "5 +trendy2 4 * sussy baka (3 qwerty0uiop[]\\asdfg=h-1j7)kl;'\"zxcvbnm,./98|`~";
-    const vector<Token> tokens = tokenize(str);
+    const string validPostfixStr = "3 4 2 * +";
+    const vector<Token> validPostfix = tokenize(validPostfixStr);
 
-    cout << "Tokens in tokens vector: " << endl;
-    for (const Token& t : tokens) {
+    cout << "\"3 4 2 * +\" into isValidPostfix should return true: " << isValidPostfix(validPostfix) << endl;
+
+    const string tooManyOpsStr = "3 - 4 2 * + ";
+    const string tooLittleOpsStr = "3 4 2 *";
+
+    const vector<Token> tooManyOps = tokenize(tooManyOpsStr);
+    const vector<Token> tooLittleOps = tokenize(tooLittleOpsStr);
+
+    cout << "\"3 - 4 2 * + \" into isValidPostfix should return false: " << isValidPostfix(tooManyOps) << endl;
+    cout << "\"3 4 2 *\" into isValidPostfix should return false: " << isValidPostfix(tooLittleOps) << endl;
+
+    const vector<Token> onlyOneNumber = tokenize("1");
+
+    cout << "\"1\" into isValidPostfix should return true: " << isValidPostfix(onlyOneNumber) << endl;
+
+    const vector<Token> onlyOneOperator = tokenize("+");
+
+    cout << "\"+\" into isValidPostfix should return false: " << isValidPostfix(onlyOneOperator) << endl;
+
+    cout << endl;
+
+    const string strWithTrash = "(5 +trendy2 )/ 4  sussy baka (3 qwerty0uiop[]\\asdfg=h-1j7)kl;'\"zxcvbnm,./98|`~";
+    const vector<Token> validInfix = tokenize(strWithTrash);
+
+    cout << "Tokens in validInfix vector: " << endl;
+    for (const Token& t : validInfix) {
         cout << t.value << " ";
     }
     cout << endl;
-
-    cout << "Precedence for the individual Token objects in tokens vector: " << endl;
-    for (const Token& t : tokens) {
-        cout << precedence(t.value) << " ";
-    }
+    //
+    // cout << "Precedence for the individual Token objects in validInfix vector: " << endl;
+    // for (const Token& t : validInfix) {
+    //     cout << precedence(t.value) << " ";
+    // }
 
     return 0;
 }
