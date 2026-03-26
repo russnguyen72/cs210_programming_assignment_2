@@ -90,3 +90,15 @@ at the current digit. This means that digits that are separated will not be toke
 grouped together with no spaces are. This fixes the multi-digit numbers not tokenizing correctly problem that I just
 found out going into this development session. After that, I brainstormed what a characteristics a valid infix expression
 has, and built many early false returns into the isValidInfix method if they do not follow those characteristics.
+
+---
+
+### Entry 7
+#### Date: 2026-03-26
+
+I finished the development of the program with the implementation of the infixToPostfix method. While developing this method
+and testing it by converting a complex, but valid, infix expression to postfix expression and then evaluating it, I saw that
+my methods were returning the wrong value. I initially thought that the infixToPostfix method did not work, but on further
+inspection, I realized that my evalPostfix method actually had a bug that I did not thoroughly test for, which was subtraction
+and division happening in the wrong order. I then made a quick fix to the algorithm, and then got the expected result when
+comparing it to my own calculations of what the infix expression should be returned when solved by a human.
