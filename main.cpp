@@ -19,20 +19,34 @@ struct Token {
 vector<Token> tokenize(const string& line) {
     bool isOperator(const string& s);
     vector<Token> tokens;
-    for (int i = 0; i < line.length(); i++) {
+    int i = 0;
+    while (i < line.length()) {
         if (isOperator(line.substr(i, 1)) || isdigit(line[i]) || line[i] == ')' || line[i] == '(') {
-            if (line[i] == '(' && !tokens.empty()) {
-                const Token* last = &tokens.back();
-                if (isdigit(last->value[0])) {
-                    Token mult;
-                    mult.value = "*";
-                    tokens.push_back(mult);
+            if (isdigit(line[i])) {
+                string num = line.substr(i, 1);
+                while (i + 1 < line.length() && isdigit(line[i + 1])) {
+                    num += line.substr(++i, 1);
                 }
+                Token t;
+                t.value = num;
+                tokens.push_back(t);
+                i++;
             }
-            Token t;
-            t.value = line[i];
-            tokens.push_back(t);
-        }
+            else {
+                if (line[i] == '(' && !tokens.empty()) {
+                    const Token* last = &tokens.back();
+                    if (isdigit(last->value[0])) {
+                        Token mult;
+                        mult.value = "*";
+                        tokens.push_back(mult);
+                    }
+                }
+                Token t;
+                t.value = line.substr(i, 1);
+                tokens.push_back(t);
+                i++;
+            }
+        } else i++;
     }
     return tokens;
 }
@@ -70,8 +84,42 @@ bool isValidPostfix(const vector<Token>& tokens) {
 }
 
 bool isValidInfix(const vector<Token>& tokens) {
-    // TODO
-    return false;
+    int i = 0;
+    ArrayStack<string> openParentheses;
+    while (i < tokens.size()) {
+        const Token *t = &tokens[i];
+        if (t->value == "(") {
+            openParentheses.push(t->value);
+        }
+        else if (t->value == ")") {
+            try {
+                openParentheses.pop();
+            }
+            catch (...) {
+                return false;
+            }
+        }
+        else {
+            if (i == 0) {
+                if (isOperator(t->value)) return false;
+            }
+            else {
+                const Token *prev = &tokens[i - 1];
+                if (isOperator(t->value)) {
+                    if (i == tokens.size() - 1) return false;
+                    if (isOperator(prev->value)) return false;
+                }
+                else {
+                    if (prev->value == ")") return false;
+                    if (prev->value != "(" && !isOperator(prev->value)) return false;
+                }
+            }
+        }
+
+        i++;
+    }
+
+    return true;
 }
 
 // Conversion
@@ -176,11 +224,11 @@ int main() {
     //     cout << "top method has successful safeguard" << endl << endl;
     // }
 
-    const string validPostfixStr = "3 4 2 * +";
+    const string validPostfixStr = "13 4 2 * +";
     const vector<Token> validPostfix = tokenize(validPostfixStr);
 
-    cout << "\"3 4 2 * +\" into isValidPostfix should return true: " << isValidPostfix(validPostfix) << endl;
-    cout << "\"3 4 2 * +\" into evalPostfix should return 11: " << evalPostfix(validPostfix) << endl;
+    cout << "\"13 4 2 * +\" into isValidPostfix should return true: " << isValidPostfix(validPostfix) << endl;
+    cout << "\"13 4 2 * +\" into evalPostfix should return 21: " << evalPostfix(validPostfix) << endl;
 
     const string tooManyOpsStr = "3 - 4 2 * + ";
     const string tooLittleOpsStr = "3 4 2 *";
@@ -216,14 +264,21 @@ int main() {
 
     cout << endl;
 
-    const string strWithTrash = "(5 +trendy2 )/ 4  sussy baka (3 qwerty0uiop[]\\asdfg=h-1j7)kl;'\"zxcvbnm,./98|`~";
-    const vector<Token> validInfix = tokenize(strWithTrash);
+    const string strWithTrash = "(54 +trendy2 )/ 4  sussy baka (3 qwerty0uiop[]\\asdfg=h-1j7)kl;'\"zxcvbnm,./98|`~";
+    const vector<Token> strWithTrashVector = tokenize(strWithTrash);
 
-    cout << "Tokens in validInfix vector: " << endl;
-    for (const Token& t : validInfix) {
+    cout << "strWithTrash into isValidInfix should return false: " << isValidPostfix(strWithTrashVector) << endl;
+
+    const vector<Token> validInfix = tokenize("(30 + 42) * 10 + (15/20) - (201 + 400) * 1");
+
+    cout << "\"(30 + 42) * 10 + (15/20) - (201 + 400) * 1\" into isValidInfix should return true: " << isValidInfix(validInfix) << endl;
+
+    cout << "Tokens in strWithTrashVector: " << endl;
+    for (const Token& t : strWithTrashVector) {
         cout << t.value << " ";
     }
     cout << endl;
+
     //
     // cout << "Precedence for the individual Token objects in validInfix vector: " << endl;
     // for (const Token& t : validInfix) {

@@ -75,3 +75,18 @@ when it encounters a closing parentheses. In order to test evalPostfix, I just t
 and invalid postfix expressions that I have already created for the isValidPostfix method. When used on the valid postfix
 expression, I calculated the number myself and checked to see if the method would return the same value that I had calculated,
 which it did, thus verifying its capabilities for now.
+
+---
+
+### Entry 6
+#### Date: 2026-03-25
+
+I developed the isValidInfix method and improved the tokenize method again. With the tokenize method, I realized that the
+method did not group digits that were together into a single token. So, when an expression with larger numbers is fed into
+either isValidInfix or isValidPostfix, it would prematurely return false as the tokenize method would only tokenize single
+digits correctly. I fixed this by allowing the tokenize method to check ahead of its current position to see if there is
+another digit right after its current position in the string. If there is not, it will stop the tokenization of a number
+at the current digit. This means that digits that are separated will not be tokenized together, but digits that are
+grouped together with no spaces are. This fixes the multi-digit numbers not tokenizing correctly problem that I just
+found out going into this development session. After that, I brainstormed what a characteristics a valid infix expression
+has, and built many early false returns into the isValidInfix method if they do not follow those characteristics.
