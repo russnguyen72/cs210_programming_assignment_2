@@ -46,6 +46,9 @@ vector<Token> tokenize(const string& line) {
                 tokens.push_back(t);
                 i++;
             }
+        }
+        else if (!isspace(line[i])) {
+            throw runtime_error("Input only digits (0-9), arithmetic operators (+, -, /, *), and parentheses only");
         } else i++;
     }
     return tokens;
@@ -66,6 +69,8 @@ int precedence(const string& op) {
 // Detection
 
 bool isValidPostfix(const vector<Token>& tokens) {
+    if (tokens.empty()) return false;
+
     int numCount = 0;
     int opCount = 0;
 
@@ -84,6 +89,8 @@ bool isValidPostfix(const vector<Token>& tokens) {
 }
 
 bool isValidInfix(const vector<Token>& tokens) {
+    if (tokens.empty()) return false;
+
     int i = 0;
     ArrayStack<string> openParentheses;
     while (i < tokens.size()) {
@@ -207,29 +214,29 @@ double evalPostfix(const vector<Token>& tokens) {
 // Main
 
 int main() {
-    // string line;
-    // getline(cin, line);
-    //
-    // vector<Token> tokens = tokenize(line);
-    //
-    // if (isValidPostfix(tokens)) {
-    //     cout << "FORMAT: POSTFIX\n";
-    //     cout << "RESULT: " << evalPostfix(tokens) << "\n";
-    // }
-    // else if (isValidInfix(tokens)) {
-    //     vector<Token> postfix = infixToPostfix(tokens);
-    //     cout << "FORMAT: INFIX\n";
-    //     cout << "POSTFIX: ";
-    //     for (const auto& t : postfix) {
-    //         cout << t.value << " ";
-    //     }
-    //     cout << "\n";
-    //     cout << "RESULT: " << evalPostfix(postfix) << "\n";
-    // }
-    // else {
-    //     cout << "FORMAT: NEITHER\n";
-    //     cout << "ERROR: invalid expression\n";
-    // }
+    string line;
+    getline(cin, line);
+
+    vector<Token> tokens = tokenize(line);
+
+    if (isValidPostfix(tokens)) {
+        cout << "FORMAT: POSTFIX\n";
+        cout << "RESULT: " << evalPostfix(tokens) << "\n";
+    }
+    else if (isValidInfix(tokens)) {
+        vector<Token> postfix = infixToPostfix(tokens);
+        cout << "FORMAT: INFIX\n";
+        cout << "POSTFIX: ";
+        for (const auto& t : postfix) {
+            cout << t.value << " ";
+        }
+        cout << "\n";
+        cout << "RESULT: " << evalPostfix(postfix) << "\n";
+    }
+    else {
+        cout << "FORMAT: NEITHER\n";
+        cout << "ERROR: invalid expression\n";
+    }
 
     // ArrayStack<double> stack;
     // cout << "Adding 2 values to the stack: 5, 6" << endl << endl;
@@ -256,79 +263,6 @@ int main() {
     // }
     // catch (...) {
     //     cout << "top method has successful safeguard" << endl << endl;
-    // }
-
-    // const string validPostfixStr = "13 4 2 * +";
-    // const vector<Token> validPostfix = tokenize(validPostfixStr);
-    //
-    // cout << "\"13 4 2 * +\" into isValidPostfix should return true: " << isValidPostfix(validPostfix) << endl;
-    // cout << "\"13 4 2 * +\" into evalPostfix should return 21: " << evalPostfix(validPostfix) << endl;
-    //
-    // const string tooManyOpsStr = "3 - 4 2 * + ";
-    // const string tooLittleOpsStr = "3 4 2 *";
-    //
-    // const vector<Token> tooManyOps = tokenize(tooManyOpsStr);
-    // const vector<Token> tooLittleOps = tokenize(tooLittleOpsStr);
-    //
-    // cout << "\"3 - 4 2 * + \" into isValidPostfix should return false: " << isValidPostfix(tooManyOps) << endl;
-    //
-    // try {
-    //     cout << "\"3 - 4 2 * + \" into evalPostfix should throw an error: " << evalPostfix(tooManyOps) << endl;
-    // }
-    // catch (exception& e) {
-    //     cout << "ERROR! " << e.what() << endl;
-    // }
-    //
-    // cout << "\"3 4 2 *\" into isValidPostfix should return false: " << isValidPostfix(tooLittleOps) << endl;
-    //
-    // try {
-    //     cout << "\"3 - 4 2 * + \" into evalPostfix should throw an error: " << evalPostfix(tooLittleOps) << endl;
-    // }
-    // catch (exception& e) {
-    //     cout << "ERROR! " << e.what() << endl;
-    // }
-    //
-    // const vector<Token> onlyOneNumber = tokenize("1");
-    //
-    // cout << "\"1\" into isValidPostfix should return true: " << isValidPostfix(onlyOneNumber) << endl;
-    //
-    // const vector<Token> onlyOneOperator = tokenize("+");
-    //
-    // cout << "\"+\" into isValidPostfix should return false: " << isValidPostfix(onlyOneOperator) << endl;
-    //
-    // cout << endl;
-    //
-    // const string strWithTrash = "(54 +trendy2 )/ 4  sussy baka (3 qwerty0uiop[]\\asdfg=h-1j7)kl;'\"zxcvbnm,./98|`~";
-    // const vector<Token> strWithTrashVector = tokenize(strWithTrash);
-    //
-    // cout << "strWithTrash into isValidInfix should return false: " << isValidPostfix(strWithTrashVector) << endl;
-
-    const vector<Token> validInfix = tokenize("(30 + 42) * 10 + (15/20) - (201 + 400) * 1");
-
-    cout << "\"(30 + 42) * 10 + (15/20) - (201 + 400) * 1\" into isValidInfix should return true: " << isValidInfix(validInfix) << endl;
-
-    try {
-        vector<Token> convertedInfix = infixToPostfix(validInfix);
-        for (Token t : convertedInfix) {
-            cout << t.value << " ";
-        }
-        cout << endl;
-        cout << evalPostfix(convertedInfix) << endl;
-    }
-    catch (...) {
-        cout << "error found";
-    }
-
-    // cout << "Tokens in strWithTrashVector: " << endl;
-    // for (const Token& t : strWithTrashVector) {
-    //     cout << t.value << " ";
-    // }
-    // cout << endl;
-
-    //
-    // cout << "Precedence for the individual Token objects in validInfix vector: " << endl;
-    // for (const Token& t : validInfix) {
-    //     cout << precedence(t.value) << " ";
     // }
 
     return 0;

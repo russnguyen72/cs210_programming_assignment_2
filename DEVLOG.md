@@ -102,3 +102,17 @@ my methods were returning the wrong value. I initially thought that the infixToP
 inspection, I realized that my evalPostfix method actually had a bug that I did not thoroughly test for, which was subtraction
 and division happening in the wrong order. I then made a quick fix to the algorithm, and then got the expected result when
 comparing it to my own calculations of what the infix expression should be returned when solved by a human.
+
+---
+
+### Entry 8
+#### Date: 2026-03-27
+
+I cleaned up the end of the main.cpp file, keeping the ArrayStack tests commented out while removing many of the initial
+tests that I wrote for the main.cpp methods. All of these tests can be performed from the already included portion of the
+main function that was initially present when the filed was copied. When testing, I saw that empty strings and strings that
+are clearly not mathematical expressions would return unexpected results, so I modified isValidPostfix and isValidInfix to
+return false when they notice an empty string and modified tokenizer to throw an error if it comes across a character that
+is not either a digit, operator, parentheses, or a space. This allows tokenizer to still parse correct mathematical notation,
+whether it is dense or spaced out, but reject anything else that the user may feed it if it is not explicity a dgit, operator,
+parentheses, or a space.
